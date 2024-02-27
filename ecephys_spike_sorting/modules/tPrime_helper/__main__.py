@@ -300,11 +300,6 @@ def parse_catgt_fyi(fyi_path, toStream_id):
                 else:
                     from_list_ids.append((js,ip))
                     from_list.append(curr_path)
-                    
-                print(stream_str)
-                print(js)
-                print(ip)
-                print(toStream_id)
   
             elif line.find('times') == 0:
                 # this is the path to a file of event edges

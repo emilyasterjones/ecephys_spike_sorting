@@ -106,19 +106,19 @@ def run_CatGT(args):
     run_name = args['catGT_helper_params']['run_name'] + '_g' + str(first_gate)
     fyi_path = os.path.join(catgt_runDir, (run_name + '_fyi.txt'))
     all_fyi_path =  os.path.join(catgt_runDir, (run_name + '_all_fyi.txt'))
-    temp_path = os.path.join(catgt_runDir, 'temp.txt')
+    
     if Path(fyi_path).is_file():        
         if Path(all_fyi_path).is_file():
             # append current fyi
-            if os_str == 'linux':
-                cat_fyi_cmd = 'cat ' + all_fyi_path + ' ' + fyi_path + ' > ' + temp_path
-            else:
-                cat_fyi_cmd = 'type ' + all_fyi_path + ' ' + fyi_path + ' > ' + temp_path
-            print(cat_fyi_cmd)
-            subprocess.Popen(cat_fyi_cmd, shell='False').wait()
-            os.remove(all_fyi_path)
-            shutil.copyfile(temp_path, all_fyi_path)
-            os.remove(temp_path)
+            with open(all_fyi_path,'r') as f0:
+                allSet = set(f0.readlines())
+            with open(fyi_path,'r') as f1:
+                newSet = set(f1.readlines())
+            allSet = allSet | newSet          # union of sets removes duplicate lines
+            allList = list(allSet)
+            allList.sort()
+            with open(all_fyi_path,'w') as f0:
+                f0.writelines(allList)
         else:
             # copy current fyi to all_fyi
             shutil.copyfile(fyi_path, all_fyi_path)

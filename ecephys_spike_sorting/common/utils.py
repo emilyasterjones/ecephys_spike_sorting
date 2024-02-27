@@ -290,7 +290,7 @@ def load_kilosort_data(folder,
         Quality ratings from cluster_group.tsv file
     cluster_amplitude : Python list
         Average amplitude for each cluster from cluster_Amplitude.tsv file
-    pc_features (optinal) : numpy.ndarray (N x channels x num_PCs)
+    pc_features (optional) : numpy.ndarray (N x channels x num_PCs)
         PC features for each spike
     pc_feature_ind (optional) : numpy.ndarray (M x channels)
         Channels used for PC calculation for each unit
@@ -336,7 +336,12 @@ def load_kilosort_data(folder,
         
     cluster_amplitude = read_cluster_amplitude_tsv(os.path.join(folder, 'cluster_Amplitude.tsv'))
     
-        
+    # check that cluster cluster_amplitude has the same number of entries as templates
+    # if highest index units have no spikes, they will not have an entry in cluster_Amplitudes.tsv
+    diff = templates.shape[0] - cluster_amplitude.size
+    if diff > 0:
+        pad = np.zeros((diff,))
+        cluster_amplitude = np.append(cluster_amplitude,pad)
         
 
     if not include_pcs:
